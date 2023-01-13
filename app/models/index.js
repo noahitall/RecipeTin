@@ -4,8 +4,10 @@ import { Category } from "./Category";
 
 export const TaskRealmContext = createRealmContext({
   schema: [Task, Category],
+  schemaVersion: 2,
 });
 
 export const CategoryRealmContext = createRealmContext({
   schema: [Task, Category],
+  schemaVersion: 2,
 });

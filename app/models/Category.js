@@ -8,8 +8,8 @@
 import {Realm} from '@realm/react';
 
 export class Category extends Realm.Object {
-  constructor(realm, title, userId) {
-    super(realm, {title, userId: userId || '_SYNC_DISABLED_'});
+  constructor(realm, name, photoUrl, userId) {
+    super(realm, {name, photoUrl, userId: userId || '_SYNC_DISABLED_'});
   }
 
   // To use a class as a Realm object type in JS, define the object schema on the static property "schema".
@@ -18,8 +18,8 @@ export class Category extends Realm.Object {
     primaryKey: '_id',
     properties: {
       _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
-      title: 'string',
-      color: 'string?',
+      name: 'string',
+      photoUrl: 'string?',
       isVisible: {type: 'bool', default: true},
       createdAt: {type: 'date', default: () => new Date()},
       userId: 'string',

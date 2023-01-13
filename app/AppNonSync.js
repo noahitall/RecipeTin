@@ -9,13 +9,15 @@ import AppContainer from './navigations/AppNavigation';
 
 
 const { useQuery } = TaskRealmContext;
+import Realm from "realm";
 
 
 export const AppNonSync = () => {
+ 
   const result = useQuery(Task);
-  const resultCat = useQuery(Category);
-    
   const tasks = useMemo(() => result.sorted("createdAt"), [result]);
+  
+  const resultCat = useQuery(Category);
   const categories = useMemo(() => resultCat.sorted("createdAt"), [resultCat]);
   
   //return the Navigation component
