@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyAwesomeRealmApp</string>
+	<string>RecipeTin</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,13 +25,13 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.anonymous.MyAwesomeRealmApp</string>
+				<string>me.noze.RecipeTin</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>exp+myawesomerealmapp</string>
+				<string>exp+recipetin</string>
 			</array>
 		</dict>
 	</array>

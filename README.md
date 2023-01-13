@@ -45,6 +45,8 @@ cd ios && pod install && cd ..
 ```
 npx expo run:ios -d
 ```
+### When running on device the package is signed by an xcode generated cert. The device does not (and should not) trust the package by default so you might see an error at this step the first time it runs. On your device with developer mode enabled, open Settings... General... VPN & Device Management and you should see the developer app, tap on it and allow it to run. Rerun the npx command above and it should work.
+
 - Build/Run on iOS Simulator 🍎
 ```
 npx expo run:ios

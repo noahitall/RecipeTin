@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "MyAwesomeRealmApp",
-    "slug": "MyAwesomeRealmApp",
+    "name": "RecipeTin",
+    "slug": "RecipeTin",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.anonymous.MyAwesomeRealmApp"
+      "bundleIdentifier": "me.noze.RecipeTin"
     }
   }
 }
