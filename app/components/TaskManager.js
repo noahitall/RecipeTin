@@ -1,15 +1,16 @@
 import React, { useCallback } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import { Task } from "../models/Task";
 import { TaskRealmContext } from "../models";
 import { IntroText } from "./IntroText";
 import { AddTaskForm } from "./AddTaskForm";
 import TaskList from "./TaskList";
+import { Category } from "../models/Category";
 
 const { useRealm } = TaskRealmContext;
 
-export const TaskManager = ({ tasks, userId }) => {
+export const TaskManager = ({ tasks, categories, userId }) => {
   const realm = useRealm();
 
   const handleAddTask = useCallback(
@@ -27,6 +28,10 @@ export const TaskManager = ({ tasks, userId }) => {
       // no changes propagate and the transaction needs to start over when connectivity allows.
       realm.write(() => {
         return new Task(realm, description, userId);
+      });
+      realm.write(() => {
+        const title = description;
+        return new Category(realm, title, userId);
       });
     },
     [realm, userId],
@@ -76,6 +81,7 @@ export const TaskManager = ({ tasks, userId }) => {
       ) : (
         <TaskList tasks={tasks} onToggleTaskStatus={handleToggleTaskStatus} onDeleteTask={handleDeleteTask} />
       )}
+      <Text style={styles.text}>Categories: {categories.length}</Text>
     </View>
   );
 };
@@ -86,4 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 20,
   },
+  text: {
+    color: "#999",
+  },  
 });
