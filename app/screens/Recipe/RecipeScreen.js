@@ -19,14 +19,18 @@ import IngredientsList from "../../components/IngredientsList/IngredientsList";
 
 import StepsList from "../../components/StepsList/StepsList";
 
+import { getRecipe } from "../../data/MockDataAPI";
+
 const { width: viewportWidth } = Dimensions.get("window");
 
 export default function RecipeScreen(props) {
   const { navigation, route } = props;
 
   const item = route.params?.item;
-  const category = getCategoryById(item.categoryId);
-  const title = getCategoryName(category.id);
+  const recipe = getRecipe(item);  
+  const category = getCategoryById(recipe.categoryId);
+  const categoryId = category.id;
+  const title = getCategoryName(categoryId);
 
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -54,10 +58,16 @@ export default function RecipeScreen(props) {
     </TouchableHighlight>
   );
 
-  const onPressIngredient = (item) => {
-    var name = getIngredientName(item);
-    let ingredient = item;
-    navigation.navigate("Ingredient", { ingredient, name });
+  // const onPressIngredient = (item) => {
+  //   var name = getIngredientName(item);
+  //   let ingredient = item;
+  //   navigation.navigate("Ingredient", { ingredient, name });
+  // };
+  
+  const onPressCategory = (item) => {
+    const title = item.name;
+    const category = item.categoryId;    
+    navigation.navigate("RecipesList", { category, title });
   };
 
   return (
@@ -66,21 +76,21 @@ export default function RecipeScreen(props) {
         <View style={styles.carousel}>
           <Carousel
             ref={slider1Ref}
-            data={item.photosArray}
+            data={recipe.photosArray}
             renderItem={renderImage}
             sliderWidth={viewportWidth}
             itemWidth={viewportWidth}
             inactiveSlideScale={1}
             inactiveSlideOpacity={1}
             firstItem={0}
-            loop={true}
+            loop={false}
             autoplay={true}
             autoplayDelay={500}
             autoplayInterval={10000}
             onSnapToItem={(index) => setActiveSlide(0)}
           />
           <Pagination
-            dotsLength={item.photosArray.length}
+            dotsLength={recipe.photosArray.length}
             activeDotIndex={activeSlide}
             containerStyle={styles.paginationContainer}
             dotColor="rgba(255, 255, 255, 0.92)"
@@ -97,12 +107,10 @@ export default function RecipeScreen(props) {
         <View style={styles.topInfoContainer}>
           <View style={styles.infoContainer}>  
             <TouchableHighlight
-              onPress={() =>
-                navigation.navigate("RecipesList", { category, title })
-              }
+              onPress={() => onPressCategory(item)}
             >
               <Text style={styles.category}>
-                {getCategoryName(item.categoryId).toUpperCase()}
+                {getCategoryName(recipe.categoryId).toUpperCase()}
               </Text>
             </TouchableHighlight>
           </View>
@@ -112,12 +120,12 @@ export default function RecipeScreen(props) {
               source={require("../../../assets/icons/time.png")}
             />
             <View style={styles.timeSubContainer}>
-              <Text style={styles.timeTotal}>{item.total_length_in_minutes} minutes total</Text>
-              <Text style={styles.timeActive}>{item.active_length_in_minutes} minutes active</Text>
+              <Text style={styles.timeTotal}>{recipe.total_length_in_minutes} minutes total</Text>
+              <Text style={styles.timeActive}>{recipe.active_length_in_minutes} minutes active</Text>
             </View>
           </View>
         </View>
-        <Text style={styles.infoRecipeName}>{item.title}</Text>
+        <Text style={styles.infoRecipeName}>{recipe.title}</Text>
         
 
         <View style={styles.infoContainer}>
@@ -127,19 +135,22 @@ export default function RecipeScreen(props) {
         
 
         <View style={styles.infoContainer}> 
-          <IngredientsList
-            ingredients={item.ingredients}
-            stepIngredients={item.stepIngredients}
+          <IngredientsList            
+            ingredients={recipe.ingredients}
+            stepIngredients={recipe.stepIngredients}
             onPress={() => {
-              let ingredients = item.ingredients;
-              let title = "Ingredients for " + item.title;
-              navigation.navigate("IngredientsDetails", { ingredients, title });
+              //TODO may need to map step ingredients to a format of [["i-butter", '200ml']]
+              
+              let title = "Ingredients for " + recipe.title;
+              let ingredients = recipe.ingredients;
+              let stepIngredients = recipe.stepIngredients;
+              navigation.navigate("IngredientsDetails", { ingredients, stepIngredients, title });
             }}
           />
         </View>        
         <View style={styles.infoContainer}>
           <StepsList
-            steps={item.steps}
+            steps={recipe.steps}
             />            
         </View>
       </View>

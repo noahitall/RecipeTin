@@ -1,13 +1,18 @@
 import React, { useLayoutEffect } from "react";
 import { FlatList, Text, View, Image, TouchableHighlight } from "react-native";
 import styles from "./styles";
-import { getIngredientName, getAllIngredients } from "../../data/MockDataAPI";
+import { getIngredientName, getAllStepIngredients } from "../../data/MockDataAPI";
 
 export default function IngredientsDetailsScreen(props) {
   const { navigation, route } = props;
 
-  const item = route.params?.ingredients;
-  const ingredientsArray = getAllIngredients(item);
+  // LOG item:["si-0","si-1","si-2","si-3","si-4","si-5","si-6","si-7","si-8"]
+  const item = route.params?.stepIngredients;
+  console.log("item:" + JSON.stringify(item));
+  const stepIngredientsArray = getAllStepIngredients(item); 
+  //Returns an array that includes metadata about each ingredient in the recipe
+  // [stepIngredient, stepIngredient.ingredient.name, stepIngredient.ingredient.photo_url ]
+  console.log("stepIngredientsArray:" + JSON.stringify(stepIngredientsArray));
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,16 +32,16 @@ export default function IngredientsDetailsScreen(props) {
   const renderIngredient = ({ item }) => (
     <TouchableHighlight underlayColor="rgba(73,182,77,0.9)" onPress={() => onPressIngredient(item[0])}>
       <View style={styles.container}>
-        <Image style={styles.photo} source={{ uri: item[0].photo_url }} />
-        <Text style={styles.title}>{item[0].name}</Text>
-        <Text style={{ color: "grey" }}>{item[1]}</Text>
+        <Image style={styles.photo} source={{ uri: item[2] }} />
+        <Text style={styles.title}>{item[1]}</Text>
+        <Text style={{ color: "grey" }}>{`${item[0].amount} ${item[0].units}` }</Text>
       </View>
     </TouchableHighlight>
   );
 
   return (
     <View>
-      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={3} data={ingredientsArray} renderItem={renderIngredient} keyExtractor={(item) => `${item.recipeId}`} />
+      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={3} data={stepIngredientsArray} renderItem={renderIngredient} keyExtractor={(item) => `${item[0].stepIngredientId}`} />
     </View>
   );
 }

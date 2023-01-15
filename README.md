@@ -52,6 +52,10 @@ npx expo run:ios -d
 npx expo run:ios
 ```
 
+## Updating the model schema
+
+When using local storage only (no sync), the schema version in ./models/index.js must be updated whenever there are changes. 
+
 ## 🔀 Setting up sync
 
 See https://github.com/realm/realm-js/blob/master/templates/docs/sync-setup.md for instructions.

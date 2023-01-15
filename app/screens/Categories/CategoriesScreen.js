@@ -35,7 +35,7 @@ export default function CategoriesScreen(props) {
     realm.write(() => {
       categories.forEach((category) => {
         console.log("adding category" + category.name);
-        new Category(realm, category.name, category.photo_url, user?.id);
+        new Category(realm, category.name, category.photo_url, category.id, user?.id);
       });
       
       return null;
@@ -63,7 +63,8 @@ export default function CategoriesScreen(props) {
 
   const onPressCategory = (item) => {
     const title = item.name;
-    const category = item;
+    const category = item.categoryId;
+    console.log(`category is ${category}`);
     navigation.navigate("RecipesList", { category, title });
   };
 

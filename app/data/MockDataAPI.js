@@ -2,6 +2,13 @@ import { Text } from 'react-native';
 import React, { Component } from 'react';
 import { recipes, categories, ingredients, stepIngredients, steps } from './dataArrays';
 
+//import realm context
+import { TaskRealmContext } from "../models";
+const { useRealm, useQuery } = TaskRealmContext;
+import { Recipe } from "../models/Recipe";
+import { useUser } from "@realm/react";
+
+
 export function getCategoryById(categoryId) {
   let category;
   categories.map(data => {
@@ -35,6 +42,15 @@ export function getStepIngredientById(stepIngredientId) {
     }
   });
   return stepIngredient;
+}
+export function getIngredientById(ingredientId) {
+  let ingredient;
+  ingredients.map(data => {
+    if (data.ingredientId == ingredientId) {
+      ingredient = data;
+    }
+  });
+  return ingredient;
 }
 
 export function getIngredientName(ingredientID) {
@@ -86,15 +102,28 @@ export function getCategoryName(categoryId) {
 }
 
 export function getRecipes(categoryId) {
-  const recipesArray = [];
-  recipes.map(data => {
-    if (data.categoryId == categoryId) {
-      recipesArray.push(data);
-    }
+  //TODO cache recipes?
+  //get recipes from realm
+  console.log("looking for recipes with caegoryId: " + categoryId);
+  const realm = useRealm();
+  const user = useUser();
+  //get recipes from realm where categoryId matches
+  const recipesResult = useQuery(Recipe, () => {
+    return realm.objects("Recipe").filtered("categoryId = $0", categoryId);
   });
-  return recipesArray;
+  //TODO Fix filtering. broken so manually filtering for now
+  return recipesResult.filter(recipe => recipe.categoryId == categoryId);
 }
-
+export function getRecipe(recipeId) {
+  const realm = useRealm();
+  const user = useUser();
+  //get recipes from realm where recipeId matches
+  const recipesResult = useQuery(Recipe, () => {
+    return realm.objects(Recipe).filtered('recipeId = $0', recipeId);
+  });
+  
+  return recipesResult[0];
+}
 // modifica
 export function getRecipesByIngredient(ingredientId) {
   const recipesArray = [];
@@ -128,6 +157,25 @@ export function getAllIngredients(idArray) {
     });
   });
   return ingredientsArray;
+}
+
+//TODO this should join the ingredients within stepIngredients - once realm is integrated for ingredients & stepIngredients
+// Do recipes and stepingredients first. 
+// Then do recipe steps. 
+export function getAllStepIngredients(idArray) {
+  const stepIngredientsArray = [];
+  idArray.map(index => {
+    stepIngredients.map(data => {
+      if (data.stepIngredientId == index) {
+        console.log("ingredientId: " + data.ingredientId);
+        const ingredientName = getIngredientName(data.ingredientId);
+        const ingredientPhotoUrl = getIngredientUrl(data.ingredientId);
+        stepIngredientsArray.push([data, ingredientName, ingredientPhotoUrl]);
+      }
+    });
+  });  
+
+  return stepIngredientsArray;
 }
 
 // functions for search
