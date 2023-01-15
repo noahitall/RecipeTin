@@ -273,7 +273,7 @@ export function loadStaticData() {
       new Recipe(realm, user?.id, user?.id, 
         recipe.recipeId, recipe.categoryId, recipe.title, recipe.photo_url, 
         recipe.photosArray, recipe.time, recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
-        recipe.stepIngredients, recipe.steps, recipe.description, category
+        recipe.stepIngredients, recipe.steps, recipe.description, recipe.servingsMade, category
       );
     });
     

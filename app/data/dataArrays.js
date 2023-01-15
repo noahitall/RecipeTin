@@ -77,6 +77,7 @@ export const recipes = [
     time: '15',
     total_length_in_minutes: 30.0,
     active_length_in_minutes: 15.0,
+    servingsMade: "Makes 12 servings",
     materials: [], //materials for all steps
     ingredients: [["i-butter", '200ml'], ["i-white-sugar", '5g'], ["i-brown-sugar", '300g']], //ingredients for all steps
     stepIngredients: ["si-0", "si-1", "si-2", "si-3", "si-4", "si-5", "si-6", "si-7", "si-8"],

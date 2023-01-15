@@ -127,7 +127,7 @@ export default function RecipeScreen(props) {
         
 
         <View style={styles.servingsMadeContainer}>
-          <Text style={styles.servingsMade}>Makes 12 servings{recipe.servingsMade}</Text>
+          <Text style={styles.servingsMade}>{recipe.servingsMade}</Text>
         </View>
 
         
