@@ -8,6 +8,7 @@ export default function RecipesListScreen(props) {
   const { navigation, route } = props;
   
   const categoryId = route?.params?.category;
+
   let recipesArray = getRecipes(categoryId);//.sorted("title")
 
   useLayoutEffect(() => {

@@ -45,7 +45,7 @@ export default function CategoriesScreen(props) {
       <View style={styles.categoriesItemContainer}>
         <Image style={styles.categoriesPhoto} source={{ uri: item.photoUrl }} />
         <Text style={styles.categoriesName}>{item.name}</Text>
-        <Text style={styles.categoriesInfo}>{getNumberOfRecipes(item._id)} recipes</Text>
+        <Text style={styles.categoriesInfo}>{item.recipes.length} recipes</Text>
       </View>
     </TouchableHighlight>
   );
