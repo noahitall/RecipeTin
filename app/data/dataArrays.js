@@ -3,7 +3,7 @@ export const categories = [
     id: "c-1",
     name: 'Cookies',
     photo_url:
-    'https://www.texanerin.com/content/uploads/2019/06/nobake-chocolate-cookies-1-650x975.jpg'
+    'https://cdn.pixabay.com/photo/2015/09/15/02/22/chocolate-chip-cookies-940428__480.jpg'
   },
   {
     id: "c-2",
@@ -16,48 +16,48 @@ export const ingredients = [
   {
     ingredientId: "i-butter",
     name: 'Butter',
-    photo_url: 'https://ak7.picdn.net/shutterstock/videos/27252067/thumb/11.jpg'
+    photo_url: 'https://burst.shopifycdn.com/photos/fresh-unwrapped-butter-in-a-sunny-kitchen.jpg?width=373&format=pjpg&exif=1&iptc=1'
   },
   {
     ingredientId: "i-brown-sugar",
     name: 'Brown Sugar',
     photo_url:
-      'https://image.freepik.com/free-photo/sea-salt-wooden-bowl-isolated-white-background_29402-416.jpg'
+      'https://images.pexels.com/photos/6634660/pexels-photo-6634660.jpeg?auto=compress&cs=tinysrgb&w=1600'
   },
   {
     ingredientId: "i-white-sugar",
     name: 'White Sugar',
-    photo_url: 'http://www.valleyspuds.com/wp-content/uploads/Russet-Potatoes-cut.jpg'
+    photo_url: 'https://images.pexels.com/photos/2523659/pexels-photo-2523659.jpeg?auto=compress&cs=tinysrgb&w=1600'
   },
   {
     ingredientId: "i-large-egg",
     name: 'Large Egg',
-    photo_url: 'http://www.valleyspuds.com/wp-content/uploads/Russet-Potatoes-cut.jpg'
+    photo_url: 'https://images.pexels.com/photos/162712/egg-white-food-protein-162712.jpeg?auto=compress&cs=tinysrgb&w=1600'
   },
   {
     ingredientId: "i-vanilla-extract",
     name: 'Vanilla Extract',
-    photo_url: 'https://image.freepik.com/free-photo/sea-salt-wooden-bowl-isolated-white-background_29402-416.jpg'
+    photo_url: 'https://images.pexels.com/photos/7262687/pexels-photo-7262687.jpeg?auto=compress&cs=tinysrgb&w=1600'
   },
   {
     ingredientId:  "i-salt",
     name: 'Salt',
-    photo_url: 'https://image.freepik.com/free-photo/sea-salt-wooden-bowl-isolated-white-background_29402-416.jpg'
+    photo_url: 'https://images.pexels.com/photos/6104433/pexels-photo-6104433.jpeg?auto=compress&cs=tinysrgb&w=1600'
   },
   {
     ingredientId: "i-baking-soda",
     name: 'Baking Soda',
-    photo_url: 'https://image.freepik.com/free-photo/sea-salt-wooden-bowl-isolated-white-background_29402-416.jpg'
+    photo_url: 'https://images.pexels.com/photos/5765/flour-powder-wheat-jar.jpg?auto=compress&cs=tinysrgb&w=1600'
   },
   {
     ingredientId: "i-all-purpose-flour",
     name: 'All Purpose Flour',
-    photo_url: 'https://image.freepik.com/free-photo/sea-salt-wooden-bowl-isolated-white-background_29402-416.jpg'
+    photo_url: 'https://images.pexels.com/photos/6287219/pexels-photo-6287219.jpeg?auto=compress&cs=tinysrgb&w=1600'
   },
   {
     ingredientId: "i-semi-sweet-chocolate-chips",
     name: 'Semi-sweet Chocolate Chips',
-    photo_url: 'https://image.freepik.com/free-photo/sea-salt-wooden-bowl-isolated-white-background_29402-416.jpg'
+    photo_url: 'https://images.pexels.com/photos/4028033/pexels-photo-4028033.jpeg?auto=compress&cs=tinysrgb&w=1600'
   },
 ];
 
@@ -69,10 +69,10 @@ export const recipes = [
     recipeId: "r-chocolate-chip-cookies",
     categoryId: "c-1",
     title: 'Chocolate Chip Cookies',
-    photo_url: 'https://www.texanerin.com/content/uploads/2019/06/nobake-chocolate-cookies-1-650x975.jpg',
+    photo_url: 'https://cdn.pixabay.com/photo/2015/09/15/02/22/chocolate-chip-cookies-940428__480.jpg',
     photosArray: [
-      'https://www.texanerin.com/content/uploads/2019/06/nobake-chocolate-cookies-1-650x975.jpg',
-      'https://aht.seriouseats.com/images/2012/02/20120221-193971-fast-food-fries-Burger-King-fries-2.jpg'
+      'https://cdn.pixabay.com/photo/2016/06/11/04/10/cookie-dough-1449456__480.jpg',
+      'https://cdn.pixabay.com/photo/2015/09/15/02/22/chocolate-chip-cookies-940428__480.jpg'
     ],
     time: '15',
     total_length_in_minutes: 30.0,
