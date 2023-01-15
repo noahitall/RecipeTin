@@ -268,10 +268,12 @@ export function loadStaticData() {
     // TODO Is there a limit to how much data can be written in a single realm write?
     // Next Recipes (move this down as more objects are added)
     recipes.forEach((recipe) => {
+      const category = realm.objects("Category").filtered("categoryId = $0", recipe.categoryId)[0];
+      console.log("found category: " + category.name);
       new Recipe(realm, user?.id, user?.id, 
         recipe.recipeId, recipe.categoryId, recipe.title, recipe.photo_url, 
         recipe.photosArray, recipe.time, recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
-        recipe.stepIngredients, recipe.steps, recipe.description
+        recipe.stepIngredients, recipe.steps, recipe.description, category
       );
     });
     

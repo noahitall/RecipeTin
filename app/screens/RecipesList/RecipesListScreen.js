@@ -3,26 +3,12 @@ import { FlatList, Text, View, TouchableHighlight, Image } from "react-native";
 import styles from "./styles";
 import { getRecipes, getCategoryName } from "../../data/MockDataAPI";
 
-import { recipes } from "../../data/dataArrays";
-
-import { TaskRealmContext } from "../../models";
-const { useRealm } = TaskRealmContext;
-
-//import models
-import { useUser } from "@realm/react";
-
 
 export default function RecipesListScreen(props) {
   const { navigation, route } = props;
-
-  const realm = useRealm(); //for writes
-  const user = useUser();
-
   
   const categoryId = route?.params?.category;
   let recipesArray = getRecipes(categoryId);//.sorted("title")
-  
-  const recipiesFromRealm = useMemo(() => recipesArray, [recipesArray]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

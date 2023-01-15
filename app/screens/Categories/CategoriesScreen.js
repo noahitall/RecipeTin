@@ -12,6 +12,7 @@ export default function CategoriesScreen(props) {
   const resultCat = getCategories();
   //Why use useMemo here?  Because the result of useQuery is a live collection, and we want to memoize it so that it doesn't re-render every time the collection changes.
   //But maybe this collection won't change, so we don't need to memoize it?
+  //Or maybe it's already hooked to rerender on change, so memoizing causes a conflict
   //const categoriesFromRealm = useMemo(() => resultCat.sorted("createdAt"), [resultCat]);
 
   useLayoutEffect(() => {

@@ -9,9 +9,9 @@ import {Realm} from '@realm/react';
 
 export class Recipe extends Realm.Object {
   constructor(realm, userId,submittedByUserId, recipeId, categoryId, title, photo_url, 
-    photosArray, time, total_length_in_minutes, active_length_in_minutes, materials,  stepIngredients, steps, description) {
+    photosArray, time, total_length_in_minutes, active_length_in_minutes, materials,  stepIngredients, steps, description, category) {
     super(realm, {recipeId, categoryId, title, photo_url, 
-      photosArray, time, total_length_in_minutes, active_length_in_minutes, materials,  stepIngredients, steps, description, userId: userId || '_SYNC_DISABLED_', submittedByUserId: submittedByUserId || '_SYNC_DISABLED_', });
+      photosArray, time, total_length_in_minutes, active_length_in_minutes, materials,  stepIngredients, steps, description, category, userId: userId || '_SYNC_DISABLED_', submittedByUserId: submittedByUserId || '_SYNC_DISABLED_', });
   }
 
   // To use a class as a Realm object type in JS, define the object schema on the static property "schema".

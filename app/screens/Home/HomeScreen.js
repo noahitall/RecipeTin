@@ -18,13 +18,14 @@ export default function HomeScreen(props) {
 
   // Get the recipes  from the realm
   const realm = useRealm(); //for writes
+  
+  //This data updates live when the realm data updates
   let recipesArray = getAllRecipes();//.sorted("title")
-  const recipiesFromRealm = useMemo(() => recipesArray, [recipesArray]);
+  
 
   if (recipesArray.length == 0) {
     console.log("No recipes found, loading... ");
-    loadStaticData();
-    recipesArray = getAllRecipes();
+    loadStaticData();    
   }
 
   useLayoutEffect(() => {
