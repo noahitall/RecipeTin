@@ -113,6 +113,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     textAlign: 'center'
+  }, 
+  servingsMadeContainer: {    
+    width: '100%',
+    textAlign: 'center',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    margin: 0,
+    padding: 0,    
+  },
+  servingsMade: {
+    fontSize: 14,
+    color: 'black'
   }
 });
 

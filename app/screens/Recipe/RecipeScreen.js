@@ -112,11 +112,11 @@ export default function RecipeScreen(props) {
               </Text>
             </TouchableHighlight>
           </View>
-          <View style={styles.timeContainer}>
+          <View style={styles.timeContainer}>            
             <Image
-              style={styles.infoPhoto}
+              style={styles.timeIcon}
               source={require("../../../assets/icons/time.png")}
-            />
+            />            
             <View style={styles.timeSubContainer}>
               <Text style={styles.timeTotal}>{recipe.total_length_in_minutes} minutes total</Text>
               <Text style={styles.timeActive}>{recipe.active_length_in_minutes} minutes active</Text>
@@ -126,8 +126,8 @@ export default function RecipeScreen(props) {
         <Text style={styles.infoRecipeName}>{recipe.title}</Text>
         
 
-        <View style={styles.infoContainer}>
-          
+        <View style={styles.servingsMadeContainer}>
+          <Text style={styles.servingsMade}>Makes 12 servings{recipe.servingsMade}</Text>
         </View>
 
         
