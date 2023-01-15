@@ -2,45 +2,17 @@ import React, { useMemo, useLayoutEffect } from "react";
 import { FlatList, Text, View, Image, TouchableHighlight } from "react-native";
 import styles from "./styles";
 import { categories } from "../../data/dataArrays";
-import { getNumberOfRecipes } from "../../data/MockDataAPI";
+import { getNumberOfRecipes, getCategories } from "../../data/MockDataAPI";
 import MenuImage from "../../components/MenuImage/MenuImage";
-
-
-
-//import realm context
-import { TaskRealmContext } from "../../models";
-const { useRealm, useQuery } = TaskRealmContext;
-
-//import models
-import { Category } from "../../models/Category";
-import { useUser } from "@realm/react";
 
 
 export default function CategoriesScreen(props) {
   const { navigation, userId } = props;
-
-  const realm = useRealm(); //for writes
-  const user = useUser();
-
-  
-  const resultCat = useQuery(Category);
-  const categoriesFromRealm = useMemo(() => resultCat.sorted("createdAt"), [resultCat]);
-
-  console.log("categoriesFromRealm");
-  console.log(JSON.stringify(categoriesFromRealm));
-  console.log("categories");
-  console.log(categories);
-
-  if (categoriesFromRealm.length == 0) {
-    realm.write(() => {
-      categories.forEach((category) => {
-        console.log("adding category" + category.name);
-        new Category(realm, category.name, category.photo_url, category.id, user?.id);
-      });
-      
-      return null;
-    });
-  }
+    
+  const resultCat = getCategories();
+  //Why use useMemo here?  Because the result of useQuery is a live collection, and we want to memoize it so that it doesn't re-render every time the collection changes.
+  //But maybe this collection won't change, so we don't need to memoize it?
+  //const categoriesFromRealm = useMemo(() => resultCat.sorted("createdAt"), [resultCat]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -63,8 +35,7 @@ export default function CategoriesScreen(props) {
 
   const onPressCategory = (item) => {
     const title = item.name;
-    const category = item.categoryId;
-    console.log(`category is ${category}`);
+    const category = item.categoryId;    
     navigation.navigate("RecipesList", { category, title });
   };
 
@@ -80,7 +51,7 @@ export default function CategoriesScreen(props) {
 
   return (
     <View>
-      <FlatList data={categoriesFromRealm} renderItem={renderCategory} keyExtractor={(item) => `${item._id}`} />
+      <FlatList data={resultCat} renderItem={renderCategory} keyExtractor={(item) => `${item._id}`} />
     </View>
   );
 }

@@ -24,6 +24,7 @@ export class Category extends Realm.Object {
       isVisible: {type: 'bool', default: true},
       createdAt: {type: 'date', default: () => new Date()},
       userId: 'string',
+      recipes: {type: 'linkingObjects', objectType: 'Recipe', property: 'category'},
     },
   };
 }

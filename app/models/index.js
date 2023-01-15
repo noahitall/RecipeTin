@@ -5,10 +5,10 @@ import { Recipe } from "./Recipe";
 
 export const TaskRealmContext = createRealmContext({
   schema: [Task, Category, Recipe],
-  schemaVersion: 4,
+  schemaVersion: 5,
 });
 
 export const CategoryRealmContext = createRealmContext({
   schema: [Task, Category, Recipe],
-  schemaVersion: 4,
+  schemaVersion: 5,
 });

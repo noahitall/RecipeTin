@@ -6,13 +6,24 @@ import { recipes, categories, ingredients, stepIngredients, steps } from './data
 import { TaskRealmContext } from "../models";
 const { useRealm, useQuery } = TaskRealmContext;
 import { Recipe } from "../models/Recipe";
+import { Category } from "../models/Category";
 import { useUser } from "@realm/react";
+
+// Realm methods
+
+// Get all categories from realm
+export function getCategories() {
+  const realm = useRealm();
+  const user = useUser();
+  const categories = realm.objects("Category")
+  return categories;
+}
 
 
 export function getCategoryById(categoryId) {
   let category;
-  categories.map(data => {
-    if (data.id == categoryId) {
+  getCategories().map(data => {
+    if (data.categoryId == categoryId) {
       category = data;
     }
   });
@@ -102,7 +113,6 @@ export function getCategoryName(categoryId) {
 }
 
 export function getRecipes(categoryId) {
-  //TODO cache recipes?
   //get recipes from realm
   console.log("looking for recipes with caegoryId: " + categoryId);
   const realm = useRealm();
@@ -113,6 +123,17 @@ export function getRecipes(categoryId) {
   });
   //TODO Fix filtering. broken so manually filtering for now
   return recipesResult.filter(recipe => recipe.categoryId == categoryId);
+}
+export function getAllRecipes() {
+  //get recipes from realm
+  const realm = useRealm();
+  const user = useUser();
+  //get recipes from realm where categoryId matches
+  const recipesResult = useQuery(Recipe, () => {
+    return realm.objects("Recipe");
+  });
+  //TODO Fix filtering. broken so manually filtering for now
+  return recipesResult;
 }
 export function getRecipe(recipeId) {
   const realm = useRealm();
@@ -219,4 +240,44 @@ export function getRecipesByRecipeName(recipeName) {
     }
   });
   return recipesArray;
+}
+
+
+export function loadStaticData() {
+  //load static data from json files
+  console.log("loading static data");
+  // Import recipes, categories, ingredients, stepIngredients, steps into realm
+  const realm = useRealm();
+  const user = useUser();
+  //load categories. Is it better to commit all at one or write inside the map? 
+  //TODO benchmark realm load time with single write vs batch write
+  // categories.map(category => {
+  //   realm.write(() => {
+  //     new Category(realm, category.name, category.photo_url, category.id, user?.id);
+  //   });    
+  // });
+  // vs
+  realm.write(() => {
+
+    // Load objects in order of references
+    // Categories first
+    categories.forEach((category) => {      
+      new Category(realm, category.name, category.photo_url, category.id, user?.id);
+    });
+
+    // TODO Is there a limit to how much data can be written in a single realm write?
+    // Next Recipes (move this down as more objects are added)
+    recipes.forEach((recipe) => {
+      new Recipe(realm, user?.id, user?.id, 
+        recipe.recipeId, recipe.categoryId, recipe.title, recipe.photo_url, 
+        recipe.photosArray, recipe.time, recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
+        recipe.stepIngredients, recipe.steps, recipe.description
+      );
+    });
+    
+    return null;
+  }
+
+  );
+
 }

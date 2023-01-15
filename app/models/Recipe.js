@@ -25,6 +25,7 @@ export class Recipe extends Realm.Object {
       submittedByUserId: 'string',    
       recipeId: 'string',
       categoryId: 'string',
+      category: "Category?",
       title: 'string',
       photo_url: 'string?',
       photosArray: 'string[]',

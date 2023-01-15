@@ -6,10 +6,9 @@ import { getRecipes, getCategoryName } from "../../data/MockDataAPI";
 import { recipes } from "../../data/dataArrays";
 
 import { TaskRealmContext } from "../../models";
-const { useRealm, useQuery } = TaskRealmContext;
+const { useRealm } = TaskRealmContext;
 
 //import models
-import { Recipe } from "../../models/Recipe";
 import { useUser } from "@realm/react";
 
 
@@ -24,27 +23,6 @@ export default function RecipesListScreen(props) {
   let recipesArray = getRecipes(categoryId);//.sorted("title")
   
   const recipiesFromRealm = useMemo(() => recipesArray, [recipesArray]);
-  console.log(recipiesFromRealm);
-  // console.log("recipiesFromRealm");
-  // console.log(JSON.stringify(recipiesFromRealm));
-  // console.log("recipesFromStub");
-  // console.log(recipes);
-
-  // if (recipesArray.length == 0) {
-  //   realm.write(() => {
-  //     recipes.forEach((recipe) => {
-  //       console.log("adding recipe" + recipe.title);
-  //       new Recipe(realm, user?.id, user?.id, 
-  //         recipe.recipeId, recipe.categoryId, recipe.title, recipe.photo_url, 
-  //         recipe.photosArray, recipe.time, recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
-  //         recipe.stepIngredients, recipe.steps, recipe.description
-  //         );
-  //     });
-      
-  //     return null;
-  //   });
-  //   recipesArray = recipes    
-  // }
 
   useLayoutEffect(() => {
     navigation.setOptions({

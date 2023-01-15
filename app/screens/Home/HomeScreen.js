@@ -1,12 +1,31 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useMemo } from "react";
 import { FlatList, Text, View, TouchableHighlight, Image } from "react-native";
 import styles from "./styles";
-import { recipes } from "../../data/dataArrays";
+//import { recipes } from "../../data/dataArrays";
 import MenuImage from "../../components/MenuImage/MenuImage";
 import { getCategoryName } from "../../data/MockDataAPI";
+import { getAllRecipes, loadStaticData} from "../../data/MockDataAPI";
+import { TaskRealmContext } from "../../models";
+import { LogData } from "react-native/Libraries/LogBox/LogBox";
+
+const { useRealm } = TaskRealmContext;
 
 export default function HomeScreen(props) {
   const { navigation } = props;
+
+  // We've gotta load the data if it's not already in the realm. 
+  
+
+  // Get the recipes  from the realm
+  const realm = useRealm(); //for writes
+  let recipesArray = getAllRecipes();//.sorted("title")
+  const recipiesFromRealm = useMemo(() => recipesArray, [recipesArray]);
+
+  if (recipesArray.length == 0) {
+    console.log("No recipes found, loading... ");
+    loadStaticData();
+    recipesArray = getAllRecipes();
+  }
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -37,7 +56,7 @@ export default function HomeScreen(props) {
 
   return (
     <View>
-      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={recipes} renderItem={renderRecipes} keyExtractor={(item) => `${item.recipeId}`} />
+      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={recipesArray} renderItem={renderRecipes} keyExtractor={(item) => `${item.recipeId}`} />
     </View>
   );
 }
