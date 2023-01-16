@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { recipes, categories, ingredients, stepIngredients, steps } from './dataArrays';
 
 //import realm context
-import {  Recipe, Category, Ingredient } from "../models";
+import {  Recipe, Category, Ingredient, Step, StepIngredient } from "../models";
 
 // Realm methods
 
@@ -155,14 +155,13 @@ export function getAllStepIngredients(realm, idArray) {
   idArray.map(index => {
     stepIngredients.map(data => {
       if (data.stepIngredientId == index) {
-        console.log("ingredientId: " + data.ingredientId);
+        //console.log("ingredientId: " + data.ingredientId);
         const ingredientName = getIngredientName(realm, data.ingredientId);
         const ingredientPhotoUrl = getIngredientUrl(realm, data.ingredientId);
         stepIngredientsArray.push([data, ingredientName, ingredientPhotoUrl]);
       }
     });
-  });  
-
+  });
   return stepIngredientsArray;
 }
 
@@ -234,8 +233,28 @@ export function loadStaticData(realm, user) {
     ingredients.forEach((ingredient) => {
       new Ingredient(realm, ingredient.name, ingredient.photo_url, ingredient.ingredientId, user?.id);
     });
+    
+  } );
 
-    // TODO Is there a limit to how much data can be written in a single realm write?
+  realm.write(() => {
+    // StepIngredients
+    stepIngredients.forEach((stepIngredient) => {
+      const ingredient = realm.objects("Ingredient").filtered("ingredientId = $0", stepIngredient.ingredientId)[0];
+      new StepIngredient(realm, stepIngredient.stepIngredientId, ingredient, stepIngredient.amount, stepIngredient.units, user?.id);
+    });
+  } );
+  
+  realm.write(() => {
+    // Step
+    steps.forEach((step) => {
+      // Map the list of stepIngredients stepIngredientIds to the actual stepIngredient objects
+      const stepIngredients = getAllStepIngredients(realm, step.stepIngredients).map((stepIngredientArray)=>stepIngredientArray[0]);
+      new Step(realm, step.stepId, stepIngredients, step.lengthInMinutes, step.description, step.warning, user?.id);
+    });
+  } );
+
+  realm.write(() => {
+
     // Next Recipes (move this down as more objects are added)
     recipes.forEach((recipe) => {
       const category = realm.objects("Category").filtered("categoryId = $0", recipe.categoryId)[0];
@@ -251,5 +270,12 @@ export function loadStaticData(realm, user) {
   }
 
   );
+
+  //Print report of how many objects were loaded of each class
+  console.log("Loaded " + realm.objects("Category").length + " categories");
+  console.log("Loaded " + realm.objects("Ingredient").length + " ingredients");
+  console.log("Loaded " + realm.objects("StepIngredient").length + " stepIngredients");
+  console.log("Loaded " + realm.objects("Step").length + " steps");
+  console.log("Loaded " + realm.objects("Recipe").length + " recipes");
 
 }
