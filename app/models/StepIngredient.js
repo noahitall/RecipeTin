@@ -8,6 +8,10 @@ export class StepIngredient extends Realm.Object {
     super(realm, {stepIngredientId, ingredient, amount, units, userId: userId || '_SYNC_DISABLED_'});
   }
 
+  nameWithQuantity() {
+    return `${this.amount} ${this.units} ${this.ingredient.name}`;    
+  }
+
   // To use a class as a Realm object type in JS, define the object schema on the static property "schema".
   // stepIngredients: {type: 'linkingObjects', objectType: 'StepIngredient', property: 'ingredient'},
   static schema = {

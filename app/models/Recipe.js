@@ -34,7 +34,7 @@ export class Recipe extends Realm.Object {
       active_length_in_minutes: 'double',
       servingsMade: 'string',
       materials: 'string[]',      
-      stepIngredients: 'string[]',
+      stepIngredients: 'StepIngredient[]',
       steps: 'Step[]',
       description: 'string?',                  
     },

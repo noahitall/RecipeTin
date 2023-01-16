@@ -16,7 +16,6 @@ export function getCategoryById(realm, categoryId) {
 }
 
 export function getStepById(realm, stepId) {
-  console.log("getStepById", stepId)
   return realm.objects("Step").filtered("stepId = $0", stepId)[0]; 
 }
 
@@ -75,9 +74,8 @@ export function getRecipesByIngredient(realm, ingredientId) {
 }
 
 // Take an array of stepIngredientIds and return an array of arrays of [stepIngredient, ingredientName, ingredientPhotoUrl]
-export function getAllStepIngredients(realm, idArray) {
-  return idArray.map(stepIngredientId => {
-    const stepIngredient = getStepIngredientById(realm, stepIngredientId);
+export function getAllStepIngredients(realm, stepIngredientArray) {
+  return stepIngredientArray.map(stepIngredient => {    
     return [stepIngredient, stepIngredient.ingredient?.name, stepIngredient.ingredient?.photoUrl ];
   });
 
@@ -168,11 +166,13 @@ export function loadStaticData(realm, user) {
       const category = realm.objects("Category").filtered("categoryId = $0", recipe.categoryId)[0];      
       //Convert the recipe.steps stepIds to a list of step objects
       const recipeSteps = recipe.steps.map((stepId) => getStepById(realm, stepId));
+      //Convert the recipe.stepIngredients stepIngredientIds to a list of stepIngredient objects
+      const recipeStepIngredients = recipe.stepIngredients.map((stepIngredientId) => getStepIngredientById(realm, stepIngredientId));
       
       new Recipe(realm, user?.id, user?.id, 
         recipe.recipeId, recipe.title, recipe.photo_url, recipe.photosArray, recipe.time, 
         recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
-        recipe.stepIngredients, recipeSteps, recipe.description, recipe.servingsMade, category
+        recipeStepIngredients, recipeSteps, recipe.description, recipe.servingsMade, category
       );
     });
     

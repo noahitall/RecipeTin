@@ -31,7 +31,7 @@ export default function RecipesListScreen(props) {
       <View style={styles.container}>
         <Image style={styles.photo} source={{ uri: item.photo_url }} />
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.category}>{getCategoryName(realm, item.categoryId)}</Text>
+        <Text style={styles.category}>{item.category?.name}</Text>
       </View>
     </TouchableHighlight>
   );
