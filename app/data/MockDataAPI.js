@@ -51,7 +51,7 @@ export function getCategoryName(realm, categoryId) {
 }
 
 export function getRecipes(realm, categoryId) {
-  return realm.objects("Recipe").filtered("categoryId = $0", categoryId);
+  return realm.objects("Recipe").filtered("category.categoryId = $0", categoryId);
   
 }
 export function getAllRecipes(realm) {
@@ -170,8 +170,8 @@ export function loadStaticData(realm, user) {
       const recipeSteps = recipe.steps.map((stepId) => getStepById(realm, stepId));
       
       new Recipe(realm, user?.id, user?.id, 
-        recipe.recipeId, recipe.categoryId, recipe.title, recipe.photo_url, 
-        recipe.photosArray, recipe.time, recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
+        recipe.recipeId, recipe.title, recipe.photo_url, recipe.photosArray, recipe.time, 
+        recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
         recipe.stepIngredients, recipeSteps, recipe.description, recipe.servingsMade, category
       );
     });

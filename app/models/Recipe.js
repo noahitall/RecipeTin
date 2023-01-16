@@ -8,9 +8,9 @@
 import {Realm} from '@realm/react';
 
 export class Recipe extends Realm.Object {
-  constructor(realm, userId,submittedByUserId, recipeId, categoryId, title, photo_url, 
+  constructor(realm, userId,submittedByUserId, recipeId, title, photo_url, 
     photosArray, time, total_length_in_minutes, active_length_in_minutes, materials,  stepIngredients, steps, description, servingsMade, category) {
-    super(realm, {recipeId, categoryId, title, photo_url, 
+    super(realm, {recipeId,  title, photo_url, 
       photosArray, time, total_length_in_minutes, active_length_in_minutes, materials,  stepIngredients, steps, description, servingsMade, category, userId: userId || '_SYNC_DISABLED_', submittedByUserId: submittedByUserId || '_SYNC_DISABLED_', });
   }
 
@@ -24,7 +24,7 @@ export class Recipe extends Realm.Object {
       userId: 'string',    
       submittedByUserId: 'string',    
       recipeId: 'string',
-      categoryId: 'string',
+      
       category: "Category?",
       title: 'string',
       photo_url: 'string?',
