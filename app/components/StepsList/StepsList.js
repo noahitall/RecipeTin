@@ -11,7 +11,7 @@ export default function StepsList (props) {
         {props.steps.map((step, index) => {
           return (
             <View  style={styles.container} key={index}>              
-              <StepsListItem step={step} index={index} />
+              <StepsListItem step={step} index={index} realm={props.realm} />
             </View>
           );
         } )}        

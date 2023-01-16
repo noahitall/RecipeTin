@@ -35,7 +35,7 @@ export class Recipe extends Realm.Object {
       servingsMade: 'string',
       materials: 'string[]',      
       stepIngredients: 'string[]',
-      steps: 'string[]',
+      steps: 'Step[]',
       description: 'string?',                  
     },
   };

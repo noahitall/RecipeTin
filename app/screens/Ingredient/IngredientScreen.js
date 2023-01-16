@@ -3,11 +3,17 @@ import { FlatList, ScrollView, Text, View, Image, TouchableHighlight } from "rea
 import styles from "./styles";
 import { getIngredientUrl, getRecipesByIngredient, getCategoryName } from "../../data/MockDataAPI";
 
+import { TaskRealmContext } from "../../models";
+const { useRealm } = TaskRealmContext;
+
 export default function IngredientScreen(props) {
   const { navigation, route } = props;
 
+  const realm = useRealm();
+
+
   const ingredientId = route.params?.ingredient;
-  const ingredientUrl = getIngredientUrl(ingredientId);
+  const ingredientUrl = getIngredientUrl(realm, ingredientId);
   const ingredientName = route.params?.name;
 
   useLayoutEffect(() => {
@@ -39,7 +45,7 @@ export default function IngredientScreen(props) {
       </View>
       <Text style={styles.ingredientInfo}>Recipes with {ingredientName}:</Text>
       <View>
-        <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={getRecipesByIngredient(ingredientId)} renderItem={renderRecipes} keyExtractor={(item) => `${item.recipeId}`} />
+        <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={getRecipesByIngredient(realm, ingredientId)} renderItem={renderRecipes} keyExtractor={(item) => `${item.recipeId}`} />
       </View>
     </ScrollView>
   );

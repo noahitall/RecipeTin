@@ -157,6 +157,7 @@ export default function RecipeScreen(props) {
         <View style={styles.infoContainer}>
           <StepsList
             steps={recipe.steps}
+            realm={realm}
             />            
         </View>
       </View>

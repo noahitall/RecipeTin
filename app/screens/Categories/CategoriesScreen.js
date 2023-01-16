@@ -1,8 +1,7 @@
 import React, { useMemo, useLayoutEffect } from "react";
 import { FlatList, Text, View, Image, TouchableHighlight } from "react-native";
 import styles from "./styles";
-import { categories } from "../../data/dataArrays";
-import { getNumberOfRecipes, getCategories } from "../../data/MockDataAPI";
+import { getCategories } from "../../data/MockDataAPI";
 import MenuImage from "../../components/MenuImage/MenuImage";
 
 import { TaskRealmContext } from "../../models";

@@ -1,5 +1,3 @@
-import { Text } from 'react-native';
-import React, { Component } from 'react';
 import { recipes, categories, ingredients, stepIngredients, steps } from './dataArrays';
 
 //import realm context
@@ -10,97 +8,49 @@ import {  Recipe, Category, Ingredient, Step, StepIngredient } from "../models";
 // Get all categories from realm
 export function getCategories(realm) {
   return realm.objects("Category");
+  
 }
 
-
-export function getCategoryById(realm, categoryId) {
-  let category;
-  getCategories().map(data => {
-    if (data.categoryId == categoryId) {
-      category = data;
-    }
-  });
-  return category;
+export function getCategoryById(realm, categoryId) {  
+  return realm.objects("Category").filtered("categoryId = $0", categoryId)[0];
 }
 
 export function getStepById(realm, stepId) {
-  let step;
-  steps.map(data => {
-    if (data.stepId == stepId) {
-      step = data;
-      //if there are stepIngredients for this step, look them up by id and assign them to step.stepIngredients
-      if (data.stepIngredients) {
-        step.stepIngredients = data.stepIngredients.map(stepIngredientId => {
-          return getStepIngredientById(realm, stepIngredientId); 
-        });
-      }
-    }});
-  return step;
+  console.log("getStepById", stepId)
+  return realm.objects("Step").filtered("stepId = $0", stepId)[0]; 
 }
 
 export function getStepIngredientById(realm, stepIngredientId) {
-  let stepIngredient;
-  stepIngredients.map(data => {
-    if (data.stepIngredientId == stepIngredientId) {
-      stepIngredient = data;
-    }
-  });
-  return stepIngredient;
+  return realm.objects("StepIngredient").filtered("stepIngredientId = $0", stepIngredientId)[0];   
 }
-export function getIngredientById(realm, ingredientId) {  
-  //get recipes from realm where categoryId matches
+export function getIngredientById(realm, ingredientId) {    
   return realm.objects("Ingredient").filtered("ingredientId = $0", ingredientId)[0]
 }
 
-export function getIngredientName(realm, ingredientId) {
-    
+export function getIngredientName(realm, ingredientId) {    
   return getIngredientById(realm, ingredientId)?.name||"Missing";
 }
 export function getStepIngredientName(realm, stepIngredientID) {
-  let name;
-  //Get Step ingredient from realm by stepIngredientId
+  const stepIngredient =  getStepIngredientById(realm, stepIngredientID) //?.ingredient?.name||"Missing";  
 
-  stepIngredients.map(data => {
-    if (data.stepIngredientId == stepIngredientID) {      
-      let parts = []
-      //assign parts amount to the array if it is not empty
-      if (data.amount) parts = [...parts, data.amount]
-      //assign parts units to the array if it is not empty
-      if (data.units) parts = [...parts, data.units]
-      //assign parts ingredientId to the array if it is not empty
-      if (data.ingredientId) parts = [...parts, getIngredientName(realm, data.ingredientId)]
+  let parts = []
+  
+  if (stepIngredient.amount) parts = [...parts, stepIngredient.amount]  
+  if (stepIngredient.units) parts = [...parts, stepIngredient.units]
+  if (stepIngredient.ingredient) parts = [...parts, stepIngredient.ingredient.name]
 
-      //  data.amount, data.ingredientId]
-      name = parts.join(' ');
-    }
-  });
-  return name;
+  return parts.join(' ');
 }
 
-export function getIngredientUrl(realm, ingredientID) {
-  let url;
-  ingredients.map(data => {
-    if (data.ingredientId == ingredientID) {
-      url = data.photo_url;
-    }
-  });
-  return url;
+export function getIngredientUrl(realm, ingredientId) {
+  return getIngredientById(realm, ingredientId)?.photoUrl||"";
 }
 
 export function getCategoryName(realm, categoryId) {
-  let name;
-  categories.map(data => {
-    if (data.id == categoryId) {
-      name = data.name;
-    }
-  });
-  return name;
+  return getCategoryById(realm, categoryId)?.name||"Missing";
 }
 
 export function getRecipes(realm, categoryId) {
-  //get recipes from realm
-  console.log("looking for recipes with caegoryId: " + categoryId);
-  //get recipes from realm where categoryId matches
   return realm.objects("Recipe").filtered("categoryId = $0", categoryId);
   
 }
@@ -108,67 +58,41 @@ export function getAllRecipes(realm) {
   return realm.objects("Recipe");
 }
 export function getRecipe(realm, recipeId) {
-  //get recipes from realm where recipeId matches
-  console.log("looking for recipe with recipeId: " + recipeId);
-  return realm.objects(Recipe).filtered('recipeId = $0', recipeId)[0];
+  return realm.objects("Recipe").filtered('recipeId = $0', recipeId)[0];
 }
-// modifica
+
+
+//UNTESTED
 export function getRecipesByIngredient(realm, ingredientId) {
-  const recipesArray = [];
-  recipes.map(data => {
-    data.ingredients.map(index => {
-      if (index[0] == ingredientId) {
-        recipesArray.push(data);
-      }
-    });
-  });
-  return recipesArray;
+  // Collect the recipes that have stepingredients that have the ingredientId
+  const stepIngredients = realm.objects("StepIngredient").filtered("ingredient.ingredientId = $0", ingredientId);
+  const recipes = stepIngredients.map(stepIngredient => stepIngredient.step.recipe);
+
+  // Remove duplicates
+  const uniqueRecipes = [...new Set(recipes)];
+  return uniqueRecipes;
+
 }
 
-export function getNumberOfRecipes(realm, categoryId) {
-  let count = 0;
-  recipes.map(data => {
-    if (data.categoryId == categoryId) {
-      count++;
-    }
-  });
-  return count;
-}
-
-export function getAllIngredients(realm, idArray) {
-  const ingredientsArray = [];
-  idArray.map(index => {
-    ingredients.map(data => {
-      if (data.ingredientId == index[0]) {
-        ingredientsArray.push([data, index[1]]);
-      }
-    });
-  });
-  return ingredientsArray;
-}
-
-//TODO this should join the ingredients within stepIngredients - once realm is integrated for ingredients & stepIngredients
-// Do recipes and stepingredients first. 
-// Then do recipe steps. 
+// Take an array of stepIngredientIds and return an array of arrays of [stepIngredient, ingredientName, ingredientPhotoUrl]
 export function getAllStepIngredients(realm, idArray) {
-  const stepIngredientsArray = [];
-  idArray.map(index => {
-    stepIngredients.map(data => {
-      if (data.stepIngredientId == index) {
-        //console.log("ingredientId: " + data.ingredientId);
-        const ingredientName = getIngredientName(realm, data.ingredientId);
-        const ingredientPhotoUrl = getIngredientUrl(realm, data.ingredientId);
-        stepIngredientsArray.push([data, ingredientName, ingredientPhotoUrl]);
-      }
-    });
+  return idArray.map(stepIngredientId => {
+    const stepIngredient = getStepIngredientById(realm, stepIngredientId);
+    return [stepIngredient, stepIngredient.ingredient?.name, stepIngredient.ingredient?.photoUrl ];
   });
-  return stepIngredientsArray;
+
 }
 
 // functions for search
-export function getRecipesByIngredientName(ingredientName) {
+export function getRecipesByIngredientName(realm, ingredientName) {
+  //Find ingredients that match name
+
+  //Find recipes that have those ingredients in their stepIngredients
+
   const nameUpper = ingredientName.toUpperCase();
   const recipesArray = [];
+
+
   // ingredients.map(data => {
   //   if (data.name.toUpperCase().includes(nameUpper)) {
   //     // data.name.yoUpperCase() == nameUpper
@@ -184,28 +108,12 @@ export function getRecipesByIngredientName(ingredientName) {
 }
 
 export function getRecipesByCategoryName(realm, categoryName) {
-  const nameUpper = categoryName.toUpperCase();
-  const recipesArray = [];
-  // categories.map(data => {
-  //   if (data.name.toUpperCase().includes(nameUpper)) {
-  //     const recipes = []; //getRecipes(realm, data.id); // return a vector of recipes
-  //     recipes.map(item => {
-  //       recipesArray.push(item);
-  //     });
-  //   }
-  // });
-  return recipesArray;
+  return realm.objects("Recipe").filtered("title CONTAINS[c] $0", categoryName);
 }
 
-export function getRecipesByRecipeName(recipeName) {
-  const nameUpper = recipeName.toUpperCase();
-  const recipesArray = [];
-  // recipes.map(data => {
-  //   if (data.title.toUpperCase().includes(nameUpper)) {
-  //     recipesArray.push(data);
-  //   }
-  // });
-  return recipesArray;
+export function getRecipesByRecipeName(realm, recipeName) {    
+  return realm.objects("Recipe").filtered("title CONTAINS[c] $0", recipeName);     
+  //return []
 }
 
 
@@ -257,12 +165,14 @@ export function loadStaticData(realm, user) {
 
     // Next Recipes (move this down as more objects are added)
     recipes.forEach((recipe) => {
-      const category = realm.objects("Category").filtered("categoryId = $0", recipe.categoryId)[0];
-      console.log("found category: " + category.name);
+      const category = realm.objects("Category").filtered("categoryId = $0", recipe.categoryId)[0];      
+      //Convert the recipe.steps stepIds to a list of step objects
+      const recipeSteps = recipe.steps.map((stepId) => getStepById(realm, stepId));
+      
       new Recipe(realm, user?.id, user?.id, 
         recipe.recipeId, recipe.categoryId, recipe.title, recipe.photo_url, 
         recipe.photosArray, recipe.time, recipe.total_length_in_minutes, recipe.active_length_in_minutes, recipe.materials, 
-        recipe.stepIngredients, recipe.steps, recipe.description, recipe.servingsMade, category
+        recipe.stepIngredients, recipeSteps, recipe.description, recipe.servingsMade, category
       );
     });
     

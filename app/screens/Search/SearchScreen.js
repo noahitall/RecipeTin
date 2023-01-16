@@ -5,8 +5,13 @@ import MenuImage from "../../components/MenuImage/MenuImage";
 import { getCategoryName, getRecipesByRecipeName, getRecipesByCategoryName, getRecipesByIngredientName } from "../../data/MockDataAPI";
 import { TextInput } from "react-native-gesture-handler";
 
+import { TaskRealmContext } from "../../models";
+const { useRealm } = TaskRealmContext;
+
 export default function SearchScreen(props) {
   const { navigation } = props;
+
+  const realm = useRealm();
 
   const [value, setValue] = useState("");
   const [data, setData] = useState([]);
@@ -39,19 +44,25 @@ export default function SearchScreen(props) {
 
   useEffect(() => {}, [value]);
 
+  //TODO add a better search algorithm
   const handleSearch = (text) => {
     setValue(text);
-    var recipeArray1 = getRecipesByRecipeName(text);
-    var recipeArray2 = getRecipesByCategoryName(text);
-    var recipeArray3 = getRecipesByIngredientName(text);
-    var aux = recipeArray1.concat(recipeArray2);
-    var recipeArray = [...new Set(aux)];
+
+    //Create a map of results to remove duplicates
+    const uniqueResults = {}
+
+    getRecipesByRecipeName(realm, text).forEach(recipe => uniqueResults[recipe.recipeId] = recipe );
+    getRecipesByCategoryName(realm, text).forEach(recipe => uniqueResults[recipe.recipeId] = recipe);
+    getRecipesByIngredientName(realm, text).forEach(recipe => uniqueResults[recipe.recipeId] = recipe);
+        
+    const recipeArray = Object.values(uniqueResults);
 
     if (text == "") {
       setData([]);
     } else {
       setData(recipeArray);
     }
+    
   };
 
   const onPressRecipe = (item) => {
@@ -63,7 +74,7 @@ export default function SearchScreen(props) {
       <View style={styles.container}>
         <Image style={styles.photo} source={{ uri: item.photo_url }} />
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.category}>{getCategoryName(item.categoryId)}</Text>
+        <Text style={styles.category}>{getCategoryName(realm, item.categoryId)}</Text>
       </View>
     </TouchableHighlight>
   );

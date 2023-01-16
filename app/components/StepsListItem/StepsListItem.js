@@ -5,7 +5,8 @@ import { getStepById } from '../../data/MockDataAPI';
 
 
 export default function StepsListItem (props) {
-    const step = getStepById(props.realm, props.step);
+    const step = getStepById(props.realm, props.step.stepId);
+
     return (      
       <View style={styles.container}>
         <View style={styles.stepHeader}>
