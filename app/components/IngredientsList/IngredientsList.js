@@ -11,7 +11,7 @@ export default function IngredientsList (props) {
           {props.stepIngredients.map((stepIngredient, index) => {
             return (
               <View key={index}>
-                <Text style={styles.text}>{getStepIngredientName(stepIngredient)}</Text>
+                <Text style={styles.text}>{getStepIngredientName(props.realm, stepIngredient)}</Text>
               </View>
             );
           } )}

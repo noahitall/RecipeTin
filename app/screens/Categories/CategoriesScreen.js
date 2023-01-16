@@ -5,11 +5,16 @@ import { categories } from "../../data/dataArrays";
 import { getNumberOfRecipes, getCategories } from "../../data/MockDataAPI";
 import MenuImage from "../../components/MenuImage/MenuImage";
 
+import { TaskRealmContext } from "../../models";
+const { useRealm } = TaskRealmContext;
+
 
 export default function CategoriesScreen(props) {
   const { navigation, userId } = props;
-    
-  const resultCat = getCategories();
+  
+  const realm = useRealm();  
+
+  const resultCat = getCategories(realm);
   //Why use useMemo here?  Because the result of useQuery is a live collection, and we want to memoize it so that it doesn't re-render every time the collection changes.
   //But maybe this collection won't change, so we don't need to memoize it?
   //Or maybe it's already hooked to rerender on change, so memoizing causes a conflict

@@ -21,13 +21,20 @@ import StepsList from "../../components/StepsList/StepsList";
 
 import { getRecipe } from "../../data/MockDataAPI";
 
+import { TaskRealmContext } from "../../models";
+const { useRealm } = TaskRealmContext;
+
+
 const { width: viewportWidth } = Dimensions.get("window");
 
 export default function RecipeScreen(props) {
   const { navigation, route } = props;
 
+  const realm = useRealm();
+
   const item = route.params?.item;
-  const recipe = getRecipe(item);  
+  const recipe = getRecipe(realm, item.recipeId);  
+  console.log("found recipe with id: " + recipe.recipeId);
   const categoryName = (recipe.category?.name||"").toUpperCase(); 
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -135,6 +142,7 @@ export default function RecipeScreen(props) {
         <View style={styles.infoContainer}> 
           <IngredientsList            
             ingredients={recipe.ingredients}
+            realm={realm}
             stepIngredients={recipe.stepIngredients}
             onPress={() => {
               //TODO may need to map step ingredients to a format of [["i-butter", '200ml']]

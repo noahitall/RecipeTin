@@ -3,24 +3,17 @@ import React, { Component } from 'react';
 import { recipes, categories, ingredients, stepIngredients, steps } from './dataArrays';
 
 //import realm context
-import { TaskRealmContext } from "../models";
-const { useRealm, useQuery } = TaskRealmContext;
-import { Recipe } from "../models/Recipe";
-import { Category } from "../models/Category";
-import { useUser } from "@realm/react";
+import {  Recipe, Category, Ingredient } from "../models";
 
 // Realm methods
 
 // Get all categories from realm
-export function getCategories() {
-  const realm = useRealm();
-  const user = useUser();
-  const categories = realm.objects("Category")
-  return categories;
+export function getCategories(realm) {
+  return realm.objects("Category");
 }
 
 
-export function getCategoryById(categoryId) {
+export function getCategoryById(realm, categoryId) {
   let category;
   getCategories().map(data => {
     if (data.categoryId == categoryId) {
@@ -30,7 +23,7 @@ export function getCategoryById(categoryId) {
   return category;
 }
 
-export function getStepById(stepId) {
+export function getStepById(realm, stepId) {
   let step;
   steps.map(data => {
     if (data.stepId == stepId) {
@@ -38,14 +31,14 @@ export function getStepById(stepId) {
       //if there are stepIngredients for this step, look them up by id and assign them to step.stepIngredients
       if (data.stepIngredients) {
         step.stepIngredients = data.stepIngredients.map(stepIngredientId => {
-          return getStepIngredientById(stepIngredientId); 
+          return getStepIngredientById(realm, stepIngredientId); 
         });
       }
     }});
   return step;
 }
 
-export function getStepIngredientById(stepIngredientId) {
+export function getStepIngredientById(realm, stepIngredientId) {
   let stepIngredient;
   stepIngredients.map(data => {
     if (data.stepIngredientId == stepIngredientId) {
@@ -54,27 +47,19 @@ export function getStepIngredientById(stepIngredientId) {
   });
   return stepIngredient;
 }
-export function getIngredientById(ingredientId) {
-  let ingredient;
-  ingredients.map(data => {
-    if (data.ingredientId == ingredientId) {
-      ingredient = data;
-    }
-  });
-  return ingredient;
+export function getIngredientById(realm, ingredientId) {  
+  //get recipes from realm where categoryId matches
+  return realm.objects("Ingredient").filtered("ingredientId = $0", ingredientId)[0]
 }
 
-export function getIngredientName(ingredientID) {
-  let name;
-  ingredients.map(data => {
-    if (data.ingredientId == ingredientID) {
-      name = data.name;
-    }
-  });
-  return name;
+export function getIngredientName(realm, ingredientId) {
+    
+  return getIngredientById(realm, ingredientId)?.name||"Missing";
 }
-export function getStepIngredientName(stepIngredientID) {
+export function getStepIngredientName(realm, stepIngredientID) {
   let name;
+  //Get Step ingredient from realm by stepIngredientId
+
   stepIngredients.map(data => {
     if (data.stepIngredientId == stepIngredientID) {      
       let parts = []
@@ -83,7 +68,7 @@ export function getStepIngredientName(stepIngredientID) {
       //assign parts units to the array if it is not empty
       if (data.units) parts = [...parts, data.units]
       //assign parts ingredientId to the array if it is not empty
-      if (data.ingredientId) parts = [...parts, getIngredientName(data.ingredientId)]
+      if (data.ingredientId) parts = [...parts, getIngredientName(realm, data.ingredientId)]
 
       //  data.amount, data.ingredientId]
       name = parts.join(' ');
@@ -92,7 +77,7 @@ export function getStepIngredientName(stepIngredientID) {
   return name;
 }
 
-export function getIngredientUrl(ingredientID) {
+export function getIngredientUrl(realm, ingredientID) {
   let url;
   ingredients.map(data => {
     if (data.ingredientId == ingredientID) {
@@ -102,7 +87,7 @@ export function getIngredientUrl(ingredientID) {
   return url;
 }
 
-export function getCategoryName(categoryId) {
+export function getCategoryName(realm, categoryId) {
   let name;
   categories.map(data => {
     if (data.id == categoryId) {
@@ -112,38 +97,23 @@ export function getCategoryName(categoryId) {
   return name;
 }
 
-export function getRecipes(categoryId) {
+export function getRecipes(realm, categoryId) {
   //get recipes from realm
   console.log("looking for recipes with caegoryId: " + categoryId);
-  const realm = useRealm();
-  const user = useUser();
   //get recipes from realm where categoryId matches
   return realm.objects("Recipe").filtered("categoryId = $0", categoryId);
   
 }
-export function getAllRecipes() {
-  //get recipes from realm
-  const realm = useRealm();
-  const user = useUser();
-  //get recipes from realm where categoryId matches
-  const recipesResult = useQuery(Recipe, () => {
-    return realm.objects("Recipe");
-  });
-  //TODO Fix filtering. broken so manually filtering for now
-  return recipesResult;
+export function getAllRecipes(realm) {
+  return realm.objects("Recipe");
 }
-export function getRecipe(recipeId) {
-  const realm = useRealm();
-  const user = useUser();
+export function getRecipe(realm, recipeId) {
   //get recipes from realm where recipeId matches
-  const recipesResult = useQuery(Recipe, () => {
-    return realm.objects(Recipe).filtered('recipeId = $0', recipeId);
-  });
-  
-  return recipesResult[0];
+  console.log("looking for recipe with recipeId: " + recipeId);
+  return realm.objects(Recipe).filtered('recipeId = $0', recipeId)[0];
 }
 // modifica
-export function getRecipesByIngredient(ingredientId) {
+export function getRecipesByIngredient(realm, ingredientId) {
   const recipesArray = [];
   recipes.map(data => {
     data.ingredients.map(index => {
@@ -155,7 +125,7 @@ export function getRecipesByIngredient(ingredientId) {
   return recipesArray;
 }
 
-export function getNumberOfRecipes(categoryId) {
+export function getNumberOfRecipes(realm, categoryId) {
   let count = 0;
   recipes.map(data => {
     if (data.categoryId == categoryId) {
@@ -165,7 +135,7 @@ export function getNumberOfRecipes(categoryId) {
   return count;
 }
 
-export function getAllIngredients(idArray) {
+export function getAllIngredients(realm, idArray) {
   const ingredientsArray = [];
   idArray.map(index => {
     ingredients.map(data => {
@@ -180,14 +150,14 @@ export function getAllIngredients(idArray) {
 //TODO this should join the ingredients within stepIngredients - once realm is integrated for ingredients & stepIngredients
 // Do recipes and stepingredients first. 
 // Then do recipe steps. 
-export function getAllStepIngredients(idArray) {
+export function getAllStepIngredients(realm, idArray) {
   const stepIngredientsArray = [];
   idArray.map(index => {
     stepIngredients.map(data => {
       if (data.stepIngredientId == index) {
         console.log("ingredientId: " + data.ingredientId);
-        const ingredientName = getIngredientName(data.ingredientId);
-        const ingredientPhotoUrl = getIngredientUrl(data.ingredientId);
+        const ingredientName = getIngredientName(realm, data.ingredientId);
+        const ingredientPhotoUrl = getIngredientUrl(realm, data.ingredientId);
         stepIngredientsArray.push([data, ingredientName, ingredientPhotoUrl]);
       }
     });
@@ -200,52 +170,50 @@ export function getAllStepIngredients(idArray) {
 export function getRecipesByIngredientName(ingredientName) {
   const nameUpper = ingredientName.toUpperCase();
   const recipesArray = [];
-  ingredients.map(data => {
-    if (data.name.toUpperCase().includes(nameUpper)) {
-      // data.name.yoUpperCase() == nameUpper
-      const recipes = getRecipesByIngredient(data.ingredientId);
-      const unique = [...new Set(recipes)];
-      unique.map(item => {
-        recipesArray.push(item);
-      });
-    }
-  });
+  // ingredients.map(data => {
+  //   if (data.name.toUpperCase().includes(nameUpper)) {
+  //     // data.name.yoUpperCase() == nameUpper
+  //     const recipes = getRecipesByIngredient(data.ingredientId);
+  //     const unique = [...new Set(recipes)];
+  //     unique.map(item => {
+  //       recipesArray.push(item);
+  //     });
+  //   }
+  // });
   const uniqueArray = [...new Set(recipesArray)];
   return uniqueArray;
 }
 
-export function getRecipesByCategoryName(categoryName) {
+export function getRecipesByCategoryName(realm, categoryName) {
   const nameUpper = categoryName.toUpperCase();
   const recipesArray = [];
-  categories.map(data => {
-    if (data.name.toUpperCase().includes(nameUpper)) {
-      const recipes = getRecipes(data.id); // return a vector of recipes
-      recipes.map(item => {
-        recipesArray.push(item);
-      });
-    }
-  });
+  // categories.map(data => {
+  //   if (data.name.toUpperCase().includes(nameUpper)) {
+  //     const recipes = []; //getRecipes(realm, data.id); // return a vector of recipes
+  //     recipes.map(item => {
+  //       recipesArray.push(item);
+  //     });
+  //   }
+  // });
   return recipesArray;
 }
 
 export function getRecipesByRecipeName(recipeName) {
   const nameUpper = recipeName.toUpperCase();
   const recipesArray = [];
-  recipes.map(data => {
-    if (data.title.toUpperCase().includes(nameUpper)) {
-      recipesArray.push(data);
-    }
-  });
+  // recipes.map(data => {
+  //   if (data.title.toUpperCase().includes(nameUpper)) {
+  //     recipesArray.push(data);
+  //   }
+  // });
   return recipesArray;
 }
 
 
-export function loadStaticData() {
+export function loadStaticData(realm, user) {
   //load static data from json files
   console.log("loading static data");
   // Import recipes, categories, ingredients, stepIngredients, steps into realm
-  const realm = useRealm();
-  const user = useUser();
   //load categories. Is it better to commit all at one or write inside the map? 
   //TODO benchmark realm load time with single write vs batch write
   // categories.map(category => {
@@ -260,6 +228,11 @@ export function loadStaticData() {
     // Categories first
     categories.forEach((category) => {      
       new Category(realm, category.name, category.photo_url, category.id, user?.id);
+    });
+
+    // Ingredients
+    ingredients.forEach((ingredient) => {
+      new Ingredient(realm, ingredient.name, ingredient.photo_url, ingredient.ingredientId, user?.id);
     });
 
     // TODO Is there a limit to how much data can be written in a single realm write?

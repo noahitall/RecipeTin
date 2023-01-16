@@ -3,13 +3,21 @@ import { FlatList, Text, View, Image, TouchableHighlight } from "react-native";
 import styles from "./styles";
 import { getIngredientName, getAllStepIngredients } from "../../data/MockDataAPI";
 
+import { TaskRealmContext } from "../../models";
+const { useRealm } = TaskRealmContext;
+
+
 export default function IngredientsDetailsScreen(props) {
   const { navigation, route } = props;
+
+  //Pass the realm to api calls
+  const realm = useRealm();
+
 
   // LOG item:["si-0","si-1","si-2","si-3","si-4","si-5","si-6","si-7","si-8"]
   const item = route.params?.stepIngredients;
   console.log("item:" + JSON.stringify(item));
-  const stepIngredientsArray = getAllStepIngredients(item); 
+  const stepIngredientsArray = getAllStepIngredients(realm, item); 
   //Returns an array that includes metadata about each ingredient in the recipe
   // [stepIngredient, stepIngredient.ingredient.name, stepIngredient.ingredient.photo_url ]
   console.log("stepIngredientsArray:" + JSON.stringify(stepIngredientsArray));
@@ -24,7 +32,7 @@ export default function IngredientsDetailsScreen(props) {
   }, []);
 
   const onPressIngredient = (item) => {
-    let name = getIngredientName(item.ingredientId);
+    let name = getIngredientName(realm, item.ingredientId);
     let ingredient = item.ingredientId;
     navigation.navigate("Ingredient", { ingredient, name });
   };

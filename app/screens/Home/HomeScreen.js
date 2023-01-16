@@ -9,6 +9,7 @@ import { TaskRealmContext } from "../../models";
 import { LogData } from "react-native/Libraries/LogBox/LogBox";
 
 const { useRealm } = TaskRealmContext;
+import { useUser } from "@realm/react";
 
 export default function HomeScreen(props) {
   const { navigation } = props;
@@ -18,14 +19,13 @@ export default function HomeScreen(props) {
 
   // Get the recipes  from the realm
   const realm = useRealm(); //for writes
-  
+  const user = useUser();
   //This data updates live when the realm data updates
-  let recipesArray = getAllRecipes();//.sorted("title")
+  let recipesArray = getAllRecipes(realm);//.sorted("title")
   
-
   if (recipesArray.length == 0) {
     console.log("No recipes found, loading... ");
-    loadStaticData();    
+    loadStaticData(realm, user);    
   }
 
   useLayoutEffect(() => {
@@ -50,7 +50,7 @@ export default function HomeScreen(props) {
       <View style={styles.container}>
         <Image style={styles.photo} source={{ uri: item.photo_url }} />
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.category}>{getCategoryName(item.categoryId)}</Text>
+        <Text style={styles.category}>{getCategoryName(realm, item.categoryId)}</Text>
       </View>
     </TouchableHighlight>
   );
