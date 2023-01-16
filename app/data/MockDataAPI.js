@@ -118,11 +118,8 @@ export function getRecipes(categoryId) {
   const realm = useRealm();
   const user = useUser();
   //get recipes from realm where categoryId matches
-  const recipesResult = useQuery(Recipe, () => {
-    return realm.objects("Recipe").filtered("categoryId = $0", categoryId);
-  });
-  //TODO Fix filtering. broken so manually filtering for now
-  return recipesResult.filter(recipe => recipe.categoryId == categoryId);
+  return realm.objects("Recipe").filtered("categoryId = $0", categoryId);
+  
 }
 export function getAllRecipes() {
   //get recipes from realm
