@@ -6,7 +6,7 @@ export const shadows = Platform.select({
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
     shadowOpacity: 0.7,
     shadowRadius: 3,

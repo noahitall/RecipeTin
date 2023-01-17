@@ -155,6 +155,7 @@ export function loadStaticData(realm, user) {
     steps.forEach((step) => {
       // Map the list of stepIngredients stepIngredientIds to the actual stepIngredient objects
       const stepIngredients = getAllStepIngredients(realm, step.stepIngredients).map((stepIngredientArray)=>stepIngredientArray[0]);
+      //const stepIngredients = []
       new Step(realm, step.stepId, stepIngredients, step.lengthInMinutes, step.description, step.warning, user?.id);
     });
   } );

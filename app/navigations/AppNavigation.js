@@ -5,6 +5,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer'
 import DrawerContainer from '../screens/DrawerContainer/DrawerContainer';
 import HomeScreen from '../screens/Home/HomeScreen';
 import CategoriesScreen from '../screens/Categories/CategoriesScreen';
+import AddCategoryScreen from '../screens/AddCategory/AddCategoryScreen';
+import EditCategoryScreen from '../screens/EditCategory/EditCategoryScreen';
 import RecipeScreen from '../screens/Recipe/RecipeScreen';
 import RecipesListScreen from '../screens/RecipesList/RecipesListScreen';
 import IngredientScreen from '../screens/Ingredient/IngredientScreen';
@@ -26,6 +28,8 @@ function MainNavigator() {
       }}
     >
       <Stack.Screen name='Home' component={HomeScreen} />
+      <Stack.Screen name='AddCategory' component={AddCategoryScreen}/>
+      <Stack.Screen name='EditCategory' component={EditCategoryScreen}/>
       <Stack.Screen name='Categories' component={CategoriesScreen}/>
       <Stack.Screen name='Recipe' component={RecipeScreen}/>
       <Stack.Screen name='RecipesList' component={RecipesListScreen} />
