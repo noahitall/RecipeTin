@@ -9,7 +9,7 @@ const { useRealm, useQuery } = TaskRealmContext;
 
 
 export default function CategoriesScreen(props) {
-  const { navigation, userId } = props;
+  const { navigation } = props;
 
   const liveCategories = useQuery(Category).filtered("isVisible = true");
   const categories = useMemo(() => liveCategories.sorted("name"), [liveCategories]);
@@ -55,8 +55,9 @@ export default function CategoriesScreen(props) {
   };
   const onLongPressCategory = (item) => {
     const title = `Editing ${item.name}`;
-    const category = item.categoryId;    
-    navigation.navigate("EditCategory", { category, title });
+    const categoryId = item.categoryId;    
+    console.log("onLongPressCategory: " + categoryId);
+    navigation.navigate("EditCategory", { categoryId, title });
   };
 
   const renderCategory = ({ item }) => (

@@ -12,12 +12,14 @@ import { TaskRealmContext } from "../../models";
 const { useRealm } = TaskRealmContext;
 
 
-export default function EditCategoryScreen(props) {
-  const { navigation, userId, categories } = props;
+export default function EditCategoryScreen(props) {  
+  const { navigation, userId } = props;
+  const { categoryId, title } = props.route.params;
   
   const realm = useRealm();  
-
-  const resultCat = categories// getCategories(realm); //Use for autocomplete? 
+  //get the category from the realm
+  const category = realm.objects("Category").filtered("categoryId = $0", categoryId)[0];  
+  //const resultCat = cateo// getCategories(realm); //Use for autocomplete? 
   //Why use useMemo here?  Because the result of useQuery is a live collection, and we want to memoize it so that it doesn't re-render every time the collection changes.
   //But maybe this collection won't change, so we don't need to memoize it?
   //Or maybe it's already hooked to rerender on change, so memoizing causes a conflict
@@ -47,17 +49,24 @@ export default function EditCategoryScreen(props) {
 
 
   const handleUpdateCategory = useCallback(
-    (name) => {
+    (name, photoUrl, categoryId="") => {
       if (!name) {
         return;
-      }
-      let photoUrl = "";
-      console.log("received name: " + name);
-      console.log("received photoUrl: " + photoUrl||"");
-      const categoryId = slugify(name, { lower: true });
-      
-      realm.write(() => {        
-        return new Category(realm, name, photoUrl, categoryId, userId);
+      }      
+      //const categoryId = slugify(name, { lower: true });      
+      realm.write(() => {
+        //check for a category with the same id and update it
+        const existingCategory = realm.objects("Category").filtered("categoryId = $0", categoryId)[0];
+        if (existingCategory) {
+          //return new Category(realm, name, photoUrl, categoryId, userId);
+          //modify the existing category in realm
+          existingCategory.name = name;
+          existingCategory.photoUrl = photoUrl;
+          existingCategory.categoryId = categoryId;          
+          console.log("updated category: " + existingCategory.categoryId);
+        } else {
+          console.error("cannot update category, not found");
+        }
       });
       navigation.goBack();
     },
@@ -74,10 +83,11 @@ export default function EditCategoryScreen(props) {
     </TouchableHighlight>
   );
 
+  console.log("category: " + category);
   return (
     <View>
-      <Text>Add Category</Text>
-      <AddCategoryForm onSubmit={handleUpdateCategory} />
+      <Text>{title}</Text>
+      <AddCategoryForm onSubmit={handleUpdateCategory} category={category}/>
     </View>
   );
 }

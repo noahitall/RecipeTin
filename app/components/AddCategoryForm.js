@@ -5,24 +5,25 @@ import { buttonStyles } from "../styles/button";
 import colors from "../styles/colors";
 import { shadows } from "../styles/shadows";
 
-export const AddCategoryForm = ({ onSubmit }) => {
-  const [description, setDescription] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
-
+export const AddCategoryForm = ({ onSubmit, category }) => {
+  const [name, setName] = useState(category?.name || "");
+  const [photoUrl, setPhotoUrl] = useState(category?.photoUrl || "");
+  
   const handleSubmit = () => {
-    onSubmit(description, photoUrl);
-    setDescription("");
+    onSubmit(name, photoUrl, category?.categoryId);
+    setName("");
     setPhotoUrl("");
   };
 
+  
   return (
     <View style={styles.form}>
       <View style={{ flexDirection: "column", marginBottom: 40 }}> 
         <Text style={{fontSize:20}}>Name</Text>        
         <TextInput
-          value={description}
+          value={name}
           placeholder="Enter category name"
-          onChangeText={setDescription}
+          onChangeText={setName}
           allowFontScaling={true}
           autoCorrect={false}
           autoCapitalize="none"
