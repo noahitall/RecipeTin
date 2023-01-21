@@ -27,6 +27,7 @@ export default function EditCategoryScreen(props) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      title: title,
       headerTitleStyle: {
         fontWeight: "bold",
         textAlign: "center",
@@ -85,8 +86,7 @@ export default function EditCategoryScreen(props) {
 
   console.log("category: " + category);
   return (
-    <View>
-      <Text>{title}</Text>
+    <View>      
       <AddCategoryForm onSubmit={handleUpdateCategory} category={category}/>
     </View>
   );
