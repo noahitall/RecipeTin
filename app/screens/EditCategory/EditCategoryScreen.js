@@ -87,7 +87,7 @@ export default function EditCategoryScreen(props) {
   console.log("category: " + category);
   return (
     <View>      
-      <AddCategoryForm onSubmit={handleUpdateCategory} category={category}/>
+      <AddCategoryForm onSubmit={handleUpdateCategory} category={category} navigation={navigation}/>
     </View>
   );
 }

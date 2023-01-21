@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, TextInput, Pressable, Platform, StyleSheet } from "react-native";
 
 import { buttonStyles } from "../styles/button";
 import colors from "../styles/colors";
 import { shadows } from "../styles/shadows";
 
-export const AddCategoryForm = ({ onSubmit, category }) => {
+export const AddCategoryForm = ({ onSubmit, category, navigation }) => {
   const [name, setName] = useState(category?.name || "");
   const [photoUrl, setPhotoUrl] = useState(category?.photoUrl || "");
   
@@ -16,6 +16,15 @@ export const AddCategoryForm = ({ onSubmit, category }) => {
   };
 
   
+
+  const handleSelectCallback = (newPhotoUrl) => {
+    console.log("handleSelect called with newPhotoUrl: " + newPhotoUrl);
+    setPhotoUrl(newPhotoUrl);
+  };
+  const handleSelectPhoto = () => {
+    navigation.navigate("SelectPhoto", { photoUrl: photoUrl, handleSelectCallback: handleSelectCallback });    
+
+  };
   return (
     
     <View style={styles.form}>
@@ -49,6 +58,11 @@ export const AddCategoryForm = ({ onSubmit, category }) => {
           <Text style={styles.submitText}>Submit</Text>
         </Pressable> 
       </View>
+      <View style={styles.container}>        
+        <Pressable onPress={handleSelectPhoto} style={styles.selectPhotoButton}>
+          <Text style={styles.submitText}>Choose Photo</Text>
+        </Pressable> 
+      </View>
     </View>
   );
 };
@@ -80,6 +94,15 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   submit: {
+    ...buttonStyles.button,
+    width: 300,
+    alignSelf: "center",
+    height: "100%",
+    marginTop: 20,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+  },
+  selectPhotoButton: {
     ...buttonStyles.button,
     width: 300,
     alignSelf: "center",

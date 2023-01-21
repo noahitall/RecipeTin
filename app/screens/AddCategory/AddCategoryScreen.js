@@ -71,7 +71,7 @@ export default function AddCategoryScreen(props) {
   return (
     <View>
       <View style={styles.paddingContainer}/>
-      <AddCategoryForm onSubmit={handleAddCategory} />
+      <AddCategoryForm onSubmit={handleAddCategory} navigation={navigation} />
     </View>
   );
 }
